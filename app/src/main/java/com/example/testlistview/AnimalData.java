@@ -8,8 +8,9 @@ import java.util.ArrayList;
  * Created by Wirasinee on 29-Oct-17.
  */
 
+//ทำให้เป็นตัวแปรแบบโกเล
 public class AnimalData {
-
+/*//วิธี1 <1>
     private  static AnimalData sInstance;
 
     public ArrayList<Animal> animalList;//ตัวแปลที่เก็บเป็นโกโบลเช่น i
@@ -22,7 +23,8 @@ public class AnimalData {
         return sInstance;
 
     }
-
-
+*/
+//วิธี2 <1>
+    public static ArrayList<Animal> animalList = new ArrayList<>();
 }
 

@@ -3,6 +3,9 @@ package com.example.testlistview;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,21 +19,20 @@ import java.util.ArrayList;
 //[2]
 public class MainActivity extends AppCompatActivity {
     private ListView mListView;
-    //private ArrayList<String> mData;//(1)
-    //private ArrayList<Animal> mData;//(10)อยากทำให้มันเป็นคนละรูปกัน ไปที่[4] Animal
+    private ArrayList<Animal> aList = AnimalData.animalList; //<4>
+    private AnimalListAdapter mAdapter; //ShiFt+F6แก้ชื่อที่เดียว
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mListView = (ListView) findViewById(R.id.list_view);
 
-        final AnimalData animalData = AnimalData.getInstance();//(18) สร้างobj animalDataแบบอซิงโครตัน
-        animalData.animalList = new ArrayList<>();//(19)animalListตัวแปลแบบโกโบล
+        //<5>final AnimalData animalData = AnimalData.getInstance();//(18) สร้างobj animalDataแบบอซิงโครตัน
+        //<5>animalData.animalList = new ArrayList<>();//(19)animalListตัวแปลแบบโกโบล
 
 
-        //mData = new ArrayList<>();(1)
-
-        Animal animal = new Animal("แมว (Cat)",R.drawable.cat,getString(R.string.details_cat));
+//วิธี1
+        /*Animal animal = new Animal("แมว (Cat)",R.drawable.cat,getString(R.string.details_cat));
         animalData.animalList.add(animal);
         animalData.animalList.add(new Animal("หมา (Dog)",R.drawable.dog,getString(R.string.details_dog)));
         animalData.animalList.add(new Animal("โลมา (Dolphin)",R.drawable.dolphin,getString(R.string.details_dolphin)));
@@ -40,48 +42,42 @@ public class MainActivity extends AppCompatActivity {
         animalData.animalList.add(new Animal("เพนกวิ้น (Penguin)",R.drawable.penguin,getString(R.string.details_penguin)));
         animalData.animalList.add(new Animal("หมู (Pig)",R.drawable.pig,getString(R.string.details_pig)));
         animalData.animalList.add(new Animal("กระต่าย (Rabbit)",R.drawable.rabbit,getString(R.string.details_rabbit)));
-        animalData.animalList.add(new Animal("เสือ (Tiger)",R.drawable.tiger,getString(R.string.details_tiger)));
+        animalData.animalList.add(new Animal("เสือ (Tiger)",R.drawable.tiger,getString(R.string.details_tiger)));*/
         //จะเอาข้อมูลมาแสดงในListViewต้องใช้ Adapterเชือมโยงรหว่างListViewกับmDate   ที่นีเี่ใช้ ArrayAdaptwe:กรณีข้อมูลเราเป็นarray หรือ arraylist
 
-        /*(5)
-        (2)
-        ArrayAdapter<Animal> adapter = new ArrayAdapter<String>(
-                this,
-                //(6)//(3)android.R.layout.simple_list_item_1,//เลเอา item1เป็นรูปแบบที่มีให้ยุแล้ว //Layout ของแต่ละitemในListView ถ้าอยากให่หน้าตาต่างกันต้องทำเพิ่ม(ทำมากกว่านี้)
-                R.layout.item,//(6) รูปแบบเลเอาที่เราทำไว้ในres->layout->item.xml (หน้าตา)   ไป[3] item.xml กรณีอยากสร้างรูปแบบเลเอาเอง
-                R.id.textView,//(7) idตัวรูปแบบที่เราสร้าง กรณีใช้แบบพืนฐานที่มีให้อยู่แล้วไม่ต้องมีบรรทัดนี้เช่นมี(3)ไม่ต้องมีอันนี้ (บอกมันว่าข้อมูลที่ได้มา เอามาใส่ตรงid textViewของlayout.itemนะ) [ถึงขั้นนี้ถ้ารันจะเป็นลิสรูปแอนครอยกับข้อความcat dog]
-                mData//แหล่งข้อมูล
-        );*/
-//(11)เนื่องจากadapterข้างบนไม่สามารถทำรูปแบบเปลียนรูปและข้ความได้เราจึงต้องสร้างขึ้นมาเอง ไปAnimalListAdapter [5]
-        //(12)
-        AnimalListAdapter adapter = new AnimalListAdapter(
+        //วิธี2<2>
+        if(savedInstanceState==null) {
+            //aList = new ArrayList<>();
+            Animal animal = new Animal("แมว (Cat)", R.drawable.cat, getString(R.string.details_cat));
+            aList.add(animal);
+            aList.add(new Animal("หมา (Dog)", R.drawable.dog, getString(R.string.details_dog)));
+            aList.add(new Animal("โลมา (Dolphin)", R.drawable.dolphin, getString(R.string.details_dolphin)));
+            aList.add(new Animal("โคอาลา (Koala)", R.drawable.koala, getString(R.string.details_koala)));
+            aList.add(new Animal("สิงโต (Lion)", R.drawable.lion, getString(R.string.details_lion)));
+            aList.add(new Animal("นกฮูก (Owl)", R.drawable.owl, getString(R.string.details_owl)));
+            aList.add(new Animal("เพนกวิ้น (Penguin)", R.drawable.penguin, getString(R.string.details_penguin)));
+            aList.add(new Animal("หมู (Pig)", R.drawable.pig, getString(R.string.details_pig)));
+            aList.add(new Animal("กระต่าย (Rabbit)", R.drawable.rabbit, getString(R.string.details_rabbit)));
+            aList.add(new Animal("เสือ (Tiger)", R.drawable.tiger, getString(R.string.details_tiger)));
+        }
+
+         mAdapter = new AnimalListAdapter(
                 this,
                 R.layout.item,//คอนเทค เลเอา รูปแบบ
-                //mData//(13)แหล่งข้อมูลทั้งหมด
-                animalData.animalList
+                aList //<3>
         );
 
-//(4) setตัวกลาง
-        mListView.setAdapter(adapter);
-//(8) คลิกที่ลิสนั้นๆแล้วแสดง... setOnItemClickListener คือคักอีเว้นของแต่ละitemนะ
+        mListView.setAdapter(mAdapter);
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {//iคือตำแหน่งลำดับitemนั้น
-               /*(9) Animal animalName = mData.get(i);//ชื่อสัตว์ที่ผู้ใช้เลือก
-                Toast.makeText(MainActivity.this,animalName,Toast.LENGTH_LONG).show();*/
 
-               /*(14)Animal animal = mData.get(i);//ชื่อสัตว์ที่ผู้ใช้เลือก
-                Toast.makeText(MainActivity.this,animal.name,Toast.LENGTH_LONG).show();*/
-
-                Animal animal = animalData.animalList.get(i);//ชื่อสัตว์ที่ผู้ใช้เลือก
+                Animal animal = aList.get(i);//ชื่อสัตว์ที่ผู้ใช้เลือก <3>
                 Toast.makeText(MainActivity.this,animal.name,Toast.LENGTH_LONG).show();
 
-                //(15)ถ้าให้แสดงชื่อสัตว?หน้าใหม่ทำไง ใช้อินเทนไงละ>.< สร้าง AnimalDetailsActivity [6]
-                Intent intent = new Intent(MainActivity.this,AnimalDetailsActivity.class);
-                //(16)intent.putExtra("name",animal.name);
-                //(16)intent.putExtra("picture",animal.picture);//CTRL+Qดูชนิดข้อมูล/เมธอทนั้นไว้ทำไร (16)เป็นวิธีส่งข้อมูลไปให้ปลายทางแบบธรรมดา กรณีมีข้อมูลส่งน้อยๆใช้ได้
 
-                ///(17)ถ้าข้อมูลเราเยอะไม่ควรputที่ละอีนแบบนี้เราควรให้mDataไปเป็นตัวแปลแบบโกโบลเลย แล้วส่งไปแค่i(ตำแหน่งที่ผู้ใช้คลิก)พอ โดยสร้างclassใมห่ [7]AnimalData
+                Intent intent = new Intent(MainActivity.this,AnimalDetailsActivity.class);
 
                 intent.putExtra("position", i);//(19) ใส่แค่ index พอแล้ว แต่เวลาปลายทางเข้าถึงจะเข้าถึงอซิงโครตันก็จะได้animalList
                 startActivity(intent);
@@ -93,4 +89,45 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    //สร้าง ตัว+ <6> CTRL+O เวลาจะสร้างเมนูจะสร้างเมนูหน้าตาไง onCreateO
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater(); //ตัวที่จะแปลงแทคxmlที่เป็นเมนู มาเป็นjava obj
+        inflater.inflate(R.menu.main,menu);
+        //สร้างไฟล์ res->new->อันที่3->เลือกtype เป็นเมนู ==>menu->new->res file->ชื่อmainได้[6]
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    //<7> เมธอดควบคุมการทำงาน CTRL+O+onOptionsI
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemid = item.getItemId();
+        switch ( itemid) {//ตรวจสอบค่าitemidว่าเท่าไหร
+            case R.id.action_add:
+                addAnimal();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item); //ถ้าไม่ตกเคสไหนเย
+        }
+
+    }
+//<8>
+    private void addAnimal() {
+      Animal a = new Animal(
+              //CTRL+P
+              "งู (Snake)",
+              R.mipmap.ic_launcher,
+              "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+      );
+      //ยัดใส่ขบวนรถไฟ
+        //อ้างถึงตัวอเลลิแต่เราอ้างaListไว้แล้ว
+        //aList.add(a); //addต่อท้าย
+        aList.add(0,a);//addจากบน
+        mAdapter.notifyDataSetChanged();//แจ้งให้อแดปเตอรู้ว่าแหล่งข้อมูลเปลียนละนะ มันก็จะอัพเดธลิสวิวให้อัตโนมัติ
+        //บอกวอแดปเตอว่าข้อมูลเปลียน
+
+    }//end addAinmal
 }

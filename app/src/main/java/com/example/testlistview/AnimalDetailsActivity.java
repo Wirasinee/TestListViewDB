@@ -24,9 +24,10 @@ public class AnimalDetailsActivity extends AppCompatActivity {
 
 /*(20จากmain)*/
         int position = intent.getIntExtra("position",0);
-        AnimalData animalData = AnimalData.getInstance();
-        Animal animal = animalData.animalList.get(position);
+        //AnimalData animalData = AnimalData.getInstance();
 
+        //Animal animal = animalData.animalList.get(position);
+        Animal animal = AnimalData.animalList.get(position);
 
 
 
