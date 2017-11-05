@@ -25,6 +25,6 @@ public class AnimalData {
     }
 */
 //วิธี2 <1>
-    public static ArrayList<Animal> animalList = new ArrayList<>();
+    public static ArrayList<Animal> animalList = new ArrayList<>(); //ที่จริงไม่ควรทำวิธีนี้
 }
 
